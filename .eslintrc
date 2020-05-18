@@ -1,0 +1,20 @@
+extends: [
+  "eslint:recommended",
+  "plugin:@typescript-eslint/eslint-recommended",
+  "plugin:@typescript-eslint/recommended",
+  "@gianlucaguarini/eslint-config",
+]
+
+parser: "@typescript-eslint/parser"
+plugins: [
+  "@typescript-eslint"
+]
+parserOptions:
+  ecmaVersion: 2018
+  sourceType: 'module'
+
+rules:
+  no-constant-condition: 0
+  fp/no-rest-parameters: 0
+  fp/no-loops: 0
+  fp/no-mutating-methods: 0
