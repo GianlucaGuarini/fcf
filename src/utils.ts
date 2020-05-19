@@ -13,16 +13,6 @@ export const panic = (message: string): void => {
   throw new Error(message)
 }
 
-export const createSharedStaticFlowProperties = (): {
-  value: undefined;
-  fnsStack: AnyFunction[];
-} => {
-  return {
-    value: undefined,
-    fnsStack: []
-  }
-}
-
 /* istanbul ignore next */
 export const loopingFns: {start: (fn: AnyFunction) => void; end: (timer: AnyValue) => void } =
   /* eslint-disable @typescript-eslint/ban-ts-ignore */

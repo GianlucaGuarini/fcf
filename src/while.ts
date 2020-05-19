@@ -1,10 +1,11 @@
 import { AnyFunction, AnyValue, WhileFlow } from './types'
 import { MULTIPLE_BREAK_LOOP_CALLS_ERROR, MULTIPLE_RUN_CALLS_ERROR } from './constants'
-import { createSharedStaticFlowProperties, loopingFns, panic } from './utils'
+import { loopingFns, panic } from './utils'
 
 export default function whileControlFlow(controlFunction: AnyFunction): WhileFlow {
   return {
-    ...createSharedStaticFlowProperties(),
+    value: undefined,
+    fnsStack: [],
     timer: undefined,
     isLooping: false,
     break(fn?: AnyFunction): WhileFlow {

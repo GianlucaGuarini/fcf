@@ -1,10 +1,11 @@
 import { AnyFunction, AnyValue, IfFlow, MaybeFunction } from './types'
 import { CONDITION_STACK_INSUFFICENT_ERROR, FN_STACK_OVERFLOW_ERROR, MULTIPLE_FALLBACK_FN_ERROR } from './constants'
-import { createSharedStaticFlowProperties, execMaybeFunction, isUndefined, panic } from './utils'
+import { execMaybeFunction, isUndefined, panic } from './utils'
 
 export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow {
   return {
-    ...createSharedStaticFlowProperties(),
+    value: undefined,
+    fnsStack: [],
     conditionsStack: isUndefined(initialCondition) ? [] : [initialCondition],
     fallback: null,
     then(fn: AnyFunction): IfFlow {
