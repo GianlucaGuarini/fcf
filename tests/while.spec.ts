@@ -55,4 +55,51 @@ describe('while - spec', () => {
       })
       .run()
   })
+
+  it('while loop value', done => {
+    const counter = {
+      i: 0
+    }
+
+    const whileFn = whileFlow(() => true)
+      .do(noop)
+      .do(() => {
+        counter.i ++
+      })
+      .do(() => {
+        if (counter.i === 3) {
+          expect(whileFn.value).to.be.equal(true)
+          done()
+          return false
+        }
+      })
+      .run()
+  })
+
+  it('while loop value', done => {
+    const counter = {
+      i: 0
+    }
+
+    const whileFn = whileFlow(() => true)
+      .do(noop)
+      .do(() => {
+        counter.i ++
+      })
+      .do(() => {
+        if (counter.i === 3) {
+          expect(whileFn.value).to.be.equal(true)
+          done()
+          return false
+        }
+      })
+      .run()
+  })
+
+  it('while loop can not be runned twice', () => {
+    const whileFn = whileFlow(() => true).run()
+
+    expect(() => whileFn.run()).to.throw()
+    expect(() => whileFn.break()).to.not.throw()
+  })
 })

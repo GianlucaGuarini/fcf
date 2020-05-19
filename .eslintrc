@@ -16,5 +16,4 @@ parserOptions:
 rules:
   no-constant-condition: 0
   fp/no-rest-parameters: 0
-  fp/no-loops: 0
   fp/no-mutating-methods: 0

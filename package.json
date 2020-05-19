@@ -10,6 +10,7 @@
     "lint": "eslint tests/* src/* --ext .ts",
     "min": "terser --compress --mangle -o fcf.min.js -- fcf.js",
     "coverage": "nyc -r lcov -e .ts -x \"*.spec.ts\" npm run test",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
     "cov-html": "nyc report -r html",
     "prepublishOnly": "npm run test && npm run build && npm run min"
   },
@@ -29,6 +30,7 @@
     "@typescript-eslint/parser": "^2.34.0",
     "benchmark": "^2.1.4",
     "chai": "^4.2.0",
+    "coveralls": "^3.1.0",
     "eslint": "^7.0.0",
     "mocha": "^7.1.2",
     "nyc": "^15.0.1",

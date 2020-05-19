@@ -26,6 +26,7 @@ export interface SwitchFlow extends ConditionalFlow {
 
 export interface WhileFlow {
   fnsStack: AnyFunction[];
+  value: AnyValue;
   isLooping: boolean;
   timer: AnyValue;
   break: (fn?: AnyFunction) => WhileFlow;

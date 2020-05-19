@@ -3,8 +3,9 @@ import { loopingFns } from './utils'
 
 export default function whileControlFlow(controlFunction: AnyFunction): WhileFlow {
   return {
-    fnsStack: [],
+    value: undefined,
     timer: undefined,
+    fnsStack: [],
     isLooping: false,
     break(fn?: AnyFunction): WhileFlow {
       if (this.isLooping) {
@@ -22,15 +23,16 @@ export default function whileControlFlow(controlFunction: AnyFunction): WhileFlo
     },
     run(...args: AnyValue[]): WhileFlow  {
       if (this.isLooping) {
-        return this
+        throw new Error('This while loop is still running, you can not run it twice')
       }
 
       this.isLooping = true
 
       const loop: () => void = () => {
         this.timer = loopingFns.start(() => {
+          this.value = controlFunction(...args)
           // stop the loop if any of the function will return false
-          if (controlFunction(...args) && this.fnsStack.every(fn => fn(...args) !== false)) {
+          if (this.value && this.fnsStack.every(fn => fn(...args) !== false)) {
             loop()
           }
         })
