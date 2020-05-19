@@ -1,17 +1,18 @@
 import { AnyFunction, AnyValue, WhileFlow } from './types'
-import { loopingFns, panic } from './utils'
+import { createSharedStaticFlowProperties, loopingFns, panic } from './utils'
 
 export default function whileControlFlow(controlFunction: AnyFunction): WhileFlow {
   return {
-    value: undefined,
+    ...createSharedStaticFlowProperties(),
     timer: undefined,
-    fnsStack: [],
     isLooping: false,
     break(fn?: AnyFunction): WhileFlow {
       if (this.isLooping) {
         loopingFns.end(this.timer)
         this.isLooping = false
         if (fn) fn()
+      } else {
+        panic('You can not break a while loop that was never started')
       }
 
       return this

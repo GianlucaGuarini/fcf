@@ -102,4 +102,10 @@ describe('while - spec', () => {
     expect(() => whileFn.run()).to.throw()
     expect(() => whileFn.break()).to.not.throw()
   })
+
+  it('while loop can not be broken if never started', () => {
+    const whileFn = whileFlow(() => true)
+
+    expect(() => whileFn.break()).to.throw()
+  })
 })

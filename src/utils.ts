@@ -3,16 +3,24 @@ import { AnyFunction, AnyValue, MaybeFunction } from './types'
 /* istanbul ignore next */
 export const globalScope = typeof window === 'undefined' ? global : window
 
-export function execMaybeFunction(fn: MaybeFunction, ...args: AnyValue[]): AnyValue {
+export const execMaybeFunction = (fn: MaybeFunction, ...args: AnyValue[]): AnyValue => {
   return typeof fn === 'function' ? fn(...args) : fn
 }
 
-export function isUndefined(value: AnyValue): boolean {
-  return typeof value === 'undefined'
+export const isUndefined = (value: AnyValue): boolean => typeof value === 'undefined'
+
+export const panic = (message: string): void => {
+  throw new Error(message)
 }
 
-export const panic: (message: string) => void = message => {
-  throw new Error(message)
+export const createSharedStaticFlowProperties = (): {
+  value: undefined;
+  fnsStack: AnyFunction[];
+} => {
+  return {
+    value: undefined,
+    fnsStack: []
+  }
 }
 
 /* istanbul ignore next */

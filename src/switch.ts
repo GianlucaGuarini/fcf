@@ -1,12 +1,12 @@
 import { AnyFunction, AnyValue, MaybeFunction, SwitchFlow } from './types'
-import { execMaybeFunction } from './utils'
+import { createSharedStaticFlowProperties, execMaybeFunction } from './utils'
 import ifFlow from './if'
 
 export default function switchControlFlow(switchValue: MaybeFunction): SwitchFlow {
   const conditionalFlow = ifFlow()
 
   return {
-    value: undefined,
+    ...createSharedStaticFlowProperties(),
     fnsStack: conditionalFlow.fnsStack,
     conditionsStack: conditionalFlow.conditionsStack,
     case(fn: MaybeFunction): SwitchFlow {
