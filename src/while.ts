@@ -1,5 +1,5 @@
 import { AnyFunction, AnyValue, WhileFlow } from './types'
-import { loopingFns } from './utils'
+import { loopingFns, panic } from './utils'
 
 export default function whileControlFlow(controlFunction: AnyFunction): WhileFlow {
   return {
@@ -23,7 +23,7 @@ export default function whileControlFlow(controlFunction: AnyFunction): WhileFlo
     },
     run(...args: AnyValue[]): WhileFlow  {
       if (this.isLooping) {
-        throw new Error('This while loop is still running, you can not run it twice')
+        panic('This while loop is still running, you can not run it twice')
       }
 
       this.isLooping = true

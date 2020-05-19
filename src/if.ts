@@ -1,5 +1,5 @@
 import { AnyFunction, AnyValue, IfFlow, MaybeFunction } from './types'
-import { execMaybeFunction, isUndefined } from './utils'
+import { execMaybeFunction, isUndefined, panic } from './utils'
 
 
 export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow {
@@ -10,7 +10,7 @@ export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow 
     fallback: null,
     then(fn: AnyFunction): IfFlow {
       if (this.fnsStack.length >= this.conditionsStack.length) {
-        throw new Error('There are not enough conditions to handle a new "then" call')
+        panic('There are not enough conditions to handle a new "then" call')
       }
 
       this.fnsStack.push(fn)
@@ -19,7 +19,7 @@ export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow 
     },
     elseIf(condition: MaybeFunction): IfFlow {
       if (this.conditionsStack.length !== this.fnsStack.length) {
-        throw new Error('Make sure that all the conditions have a "then" callback')
+        panic('Make sure that all the conditions have a "then" callback')
       }
 
       this.conditionsStack.push(condition)

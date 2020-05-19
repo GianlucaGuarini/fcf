@@ -11,6 +11,10 @@ export function isUndefined(value: AnyValue): boolean {
   return typeof value === 'undefined'
 }
 
+export const panic: (message: string) => void = message => {
+  throw new Error(message)
+}
+
 /* istanbul ignore next */
 export const loopingFns: {start: (fn: AnyFunction) => void; end: (timer: AnyValue) => void } =
   /* eslint-disable @typescript-eslint/ban-ts-ignore */
