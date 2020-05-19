@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Functional control flow helpers",
   "main": "fcf.min.js",
+  "types": "src/types.d.ts",
   "scripts": {
     "test": "npm run lint && mocha -r ts-node/register tests/**/*.spec.ts",
     "build": "rollup -c",
