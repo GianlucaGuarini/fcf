@@ -1,4 +1,5 @@
 import { AnyFunction, AnyValue, IfFlow, MaybeFunction } from './types'
+import { CONDITION_STACK_INSUFFICENT_ERROR, FN_STACK_OVERFLOW_ERROR, MULTIPLE_FALLBACK_FN_ERROR } from './constants'
 import { createSharedStaticFlowProperties, execMaybeFunction, isUndefined, panic } from './utils'
 
 export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow {
@@ -8,7 +9,7 @@ export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow 
     fallback: null,
     then(fn: AnyFunction): IfFlow {
       if (this.fnsStack.length >= this.conditionsStack.length) {
-        panic('There are not enough conditions to handle a new "then" call')
+        panic(FN_STACK_OVERFLOW_ERROR)
       }
 
       this.fnsStack.push(fn)
@@ -16,8 +17,8 @@ export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow 
       return this
     },
     elseIf(condition: MaybeFunction): IfFlow {
-      if (this.conditionsStack.length !== this.fnsStack.length) {
-        panic('Make sure that all the conditions have a "then" callback')
+      if (this.conditionsStack.length > this.fnsStack.length) {
+        panic(CONDITION_STACK_INSUFFICENT_ERROR)
       }
 
       this.conditionsStack.push(condition)
@@ -26,7 +27,7 @@ export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow 
     },
     else(fn: AnyFunction): IfFlow {
       if (this.fallback) {
-        panic('You can use the "else" and default" statements only once')
+        panic(MULTIPLE_FALLBACK_FN_ERROR)
       }
 
       this.fallback = fn

@@ -1,4 +1,5 @@
 import { AnyFunction, AnyValue, WhileFlow } from './types'
+import { MULTIPLE_BREAK_LOOP_CALLS_ERROR, MULTIPLE_RUN_CALLS_ERROR } from './constants'
 import { createSharedStaticFlowProperties, loopingFns, panic } from './utils'
 
 export default function whileControlFlow(controlFunction: AnyFunction): WhileFlow {
@@ -12,7 +13,7 @@ export default function whileControlFlow(controlFunction: AnyFunction): WhileFlo
         this.isLooping = false
         if (fn) fn()
       } else {
-        panic('You can not break a while loop that was never started')
+        panic(MULTIPLE_BREAK_LOOP_CALLS_ERROR)
       }
 
       return this
@@ -24,7 +25,7 @@ export default function whileControlFlow(controlFunction: AnyFunction): WhileFlo
     },
     run(...args: AnyValue[]): WhileFlow  {
       if (this.isLooping) {
-        panic('This while loop is still running, you can not run it twice')
+        panic(MULTIPLE_RUN_CALLS_ERROR)
       }
 
       this.isLooping = true
