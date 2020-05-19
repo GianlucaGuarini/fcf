@@ -1,6 +1,19 @@
 import { AnyFunction, AnyValue, IfFlow, MaybeFunction } from './types'
 import { execMaybeFunction, isUndefined, panic } from './utils'
 
+const isFnsStackOverflowing = (
+  fnsStack: AnyFunction[],
+  conditionsStack: AnyValue[]
+): boolean => {
+  return fnsStack.length >= conditionsStack.length
+}
+
+const areAllTheConditionsHandled = (
+  conditionsStack: AnyValue[],
+  fnsStack: AnyFunction[]
+): boolean => {
+  return conditionsStack.length !== fnsStack.length
+}
 
 export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow {
   return {
@@ -9,7 +22,7 @@ export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow 
     conditionsStack: isUndefined(initialCondition) ? [] : [initialCondition],
     fallback: null,
     then(fn: AnyFunction): IfFlow {
-      if (this.fnsStack.length >= this.conditionsStack.length) {
+      if (isFnsStackOverflowing(this.fnsStack, this.conditionsStack)) {
         panic('There are not enough conditions to handle a new "then" call')
       }
 
@@ -18,7 +31,7 @@ export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow 
       return this
     },
     elseIf(condition: MaybeFunction): IfFlow {
-      if (this.conditionsStack.length !== this.fnsStack.length) {
+      if (areAllTheConditionsHandled(this.conditionsStack, this.fnsStack)) {
         panic('Make sure that all the conditions have a "then" callback')
       }
 
@@ -28,7 +41,7 @@ export default function ifControlFlow(initialCondition?: MaybeFunction): IfFlow 
     },
     else(fn: AnyFunction): IfFlow {
       if (this.fallback) {
-        throw new Error('You can use the "else" and default" statements only once')
+        panic('You can use the "else" and default" statements only once')
       }
 
       this.fallback = fn
