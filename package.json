@@ -1,6 +1,6 @@
 {
   "name": "fcf",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Monadic Functional Control Flow Micro-Library for Javascript",
   "main": "fcf.min.js",
   "types": "src/types.d.ts",
