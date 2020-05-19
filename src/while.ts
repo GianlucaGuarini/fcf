@@ -1,10 +1,10 @@
-import { AnyFunction, AnyValue, MaybeFunction, WhileFlow } from './types'
+import { AnyValue, MaybeFunction, WhileFlow } from './types'
 import { MULTIPLE_BREAK_LOOP_CALLS_ERROR, MULTIPLE_RUN_CALLS_ERROR } from './constants'
 import { execMaybeFunction, loopingFns, panic } from './utils'
 
-const loop: (
-  scope: WhileFlow,
-  controlFunction: MaybeFunction,
+const loop: <Arguments, Return>(
+  scope: WhileFlow<Arguments, Return>,
+  controlFunction: MaybeFunction<Arguments, Return>,
   ...args: AnyValue[]
 ) => void = (scope, controlFunction, ...args) => {
   scope.timer = loopingFns.start(() => {
@@ -22,7 +22,7 @@ const WHILE_CONTROL_FLOW_STRUCT = Object.seal<WhileFlow>({
   fnsStack: [],
   controlFunction: undefined,
   isLooping: false,
-  break(fn?: AnyFunction): WhileFlow {
+  break(fn) {
     if (this.isLooping) {
       loopingFns.end(this.timer)
       this.isLooping = false
@@ -33,12 +33,12 @@ const WHILE_CONTROL_FLOW_STRUCT = Object.seal<WhileFlow>({
 
     return this
   },
-  do(fn: AnyFunction): WhileFlow {
+  do(fn) {
     this.fnsStack.push(fn)
 
     return this
   },
-  run(...args: AnyValue[]): WhileFlow  {
+  run(...args)  {
     if (this.isLooping) {
       panic(MULTIPLE_RUN_CALLS_ERROR)
     }
@@ -51,7 +51,7 @@ const WHILE_CONTROL_FLOW_STRUCT = Object.seal<WhileFlow>({
   }
 })
 
-export default function createWhileControlFlow(controlFunction: MaybeFunction): WhileFlow {
+export default function createWhileControlFlow<Arguments = AnyValue, Return = AnyValue>(controlFunction: MaybeFunction<Arguments, Return>): WhileFlow<Arguments, Return> {
   return {
     ...WHILE_CONTROL_FLOW_STRUCT,
     controlFunction

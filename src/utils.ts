@@ -3,7 +3,7 @@ import { AnyFunction, AnyValue, MaybeFunction } from './types'
 /* istanbul ignore next */
 export const globalScope = typeof window === 'undefined' ? global : window
 
-export const execMaybeFunction = (fn: MaybeFunction, ...args: AnyValue[]): AnyValue => {
+export const execMaybeFunction = <Arguments = AnyValue, Return = AnyValue>(fn: MaybeFunction<Arguments, Return>, ...args: Arguments[]): AnyValue => {
   return typeof fn === 'function' ? fn(...args) : fn
 }
 

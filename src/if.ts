@@ -1,4 +1,4 @@
-import { AnyFunction, AnyValue, IfFlow, MaybeFunction } from './types'
+import { AnyValue, IfFlow, MaybeFunction } from './types'
 import { CONDITION_STACK_INSUFFICENT_ERROR, FN_STACK_OVERFLOW_ERROR, MULTIPLE_FALLBACK_FN_ERROR } from './constants'
 import { execMaybeFunction, isUndefined, panic } from './utils'
 
@@ -7,7 +7,7 @@ const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow>({
   fallback: undefined,
   fnsStack: [],
   conditionsStack: [],
-  then(fn: AnyFunction): IfFlow {
+  then(fn) {
     if (this.fnsStack.length >= this.conditionsStack.length) {
       panic(FN_STACK_OVERFLOW_ERROR)
     }
@@ -16,7 +16,7 @@ const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow>({
 
     return this
   },
-  elseIf(condition: MaybeFunction): IfFlow {
+  elseIf(condition) {
     if (this.conditionsStack.length > this.fnsStack.length) {
       panic(CONDITION_STACK_INSUFFICENT_ERROR)
     }
@@ -25,7 +25,7 @@ const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow>({
 
     return this
   },
-  else(fn: AnyFunction): IfFlow {
+  else(fn) {
     if (this.fallback) {
       panic(MULTIPLE_FALLBACK_FN_ERROR)
     }
@@ -34,8 +34,8 @@ const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow>({
 
     return this
   },
-  run(...args: AnyValue[]): IfFlow {
-    const index = this.conditionsStack.findIndex((fn: MaybeFunction) => execMaybeFunction(fn, ...args))
+  run(...args) {
+    const index = this.conditionsStack.findIndex(fn => execMaybeFunction(fn, ...args))
     const matchedFn = this.fnsStack[index]
 
     if (matchedFn) {
@@ -48,7 +48,7 @@ const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow>({
   }
 })
 
-export default function createIfControlFlow(initialCondition?: MaybeFunction): IfFlow {
+export default function createIfControlFlow<Arguments = AnyValue, Return = AnyValue>(initialCondition?: MaybeFunction<Arguments, AnyValue>): IfFlow<Arguments, Return> {
   return {
     ...IF_CONTROL_FLOW_STRUCT,
     fnsStack: [],

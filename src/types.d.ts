@@ -2,39 +2,39 @@
 import FCF from './index'
 
 export type AnyValue = any // eslint-disable-line
-export type AnyFunction<Arguments = AnyValue, Return = Arguments> = (...args: Arguments[]) => Return
-export type MaybeFunction = AnyValue | AnyFunction
+export type AnyFunction<Arguments = AnyValue, Return = AnyValue> = (...args: Arguments[]) => Return
+export type MaybeFunction<Arguments, Return> = AnyValue | AnyFunction<Arguments, Return>
 
-export interface ConditionalFlow {
+export interface ConditionalFlow<Value = AnyValue> {
   private fnsStack: AnyFunction[];
   private conditionsStack: MaybeFunction[];
-  value: AnyValue;
+  value: Value;
 }
 
-export interface IfFlow<Arguments = AnyValue, Return = Arguments> extends ConditionalFlow {
+export interface IfFlow<Arguments = AnyValue, Return = AnyValue> extends ConditionalFlow<Return> {
   private fallback?: AnyFunction;
-  else: (fn: AnyFunction<Arguments, Return>) => IfFlow;
-  elseIf: (fn: MaybeFunction<Arguments, Return>) => IfFlow;
+  else: (fn: AnyFunction<Arguments, AnyValue>) => IfFlow;
+  elseIf: (fn: MaybeFunction<Arguments, AnyValue>) => IfFlow;
   then: (fn: AnyFunction<Arguments, Return>) => IfFlow;
   run: (...args: T[]) => IfFlow;
 }
 
-export interface SwitchFlow<Arguments = AnyValue, Return = Arguments> extends ConditionalFlow {
+export interface SwitchFlow<Arguments = AnyValue, Return = AnyValue> extends ConditionalFlow<Return> {
   private conditionalFlow: IfFlow;
   private switchValue: T;
+  case: (fn: MaybeFunction<Arguments, AnyValue>) => SwitchFlow;
   default: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
-  case: (fn: MaybeFunction<Arguments, Return>) => SwitchFlow;
   then: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
   run: (...args: T[]) => SwitchFlow;
 }
 
-export interface WhileFlow<Arguments = AnyValue, Return = Arguments> {
+export interface WhileFlow<Arguments = AnyValue, Return = AnyValue> {
   private fnsStack: AnyFunction[];
   private isLooping: boolean;
   private timer: AnyValue;
-  private controlFunction: MaybeFunction;
-  value: AnyValue;
-  break: (fn?: AnyFunction<Arguments, Return>) => WhileFlow;
+  private controlFunction: MaybeFunction<Arguments, Return>;
+  value: Return;
+  break: (fn?: AnyFunction<Arguments, AnyValue>) => WhileFlow;
   do: (fn: AnyFunction<Arguments, Return>) => WhileFlow;
   run: (...args: T[]) => WhileFlow;
 }

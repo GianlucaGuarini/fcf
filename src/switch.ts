@@ -1,4 +1,4 @@
-import { AnyFunction, AnyValue, MaybeFunction, SwitchFlow } from './types'
+import { AnyValue, MaybeFunction, SwitchFlow } from './types'
 import { execMaybeFunction } from './utils'
 import ifFlow from './if'
 
@@ -8,25 +8,25 @@ const SWITCH_CONTROL_FLOW_STRUCT = Object.seal<SwitchFlow>({
   conditionalFlow: ifFlow(),
   fnsStack: [],
   conditionsStack: [],
-  case(fn: MaybeFunction): SwitchFlow {
+  case(fn) {
     this.conditionalFlow.elseIf(fn)
 
     return this
   },
-  then(fn: AnyFunction): SwitchFlow {
+  then(fn) {
     this.conditionalFlow.then(fn)
 
     return this
   },
-  default(fn: AnyFunction): SwitchFlow {
+  default(fn) {
     this.conditionalFlow.else(fn)
 
     return this
   },
-  run(...args: AnyValue[]): SwitchFlow {
+  run(...args) {
     const testValue = execMaybeFunction(this.switchValue, ...args)
     const index = this.conditionsStack.findIndex(
-      (fn: MaybeFunction) => execMaybeFunction(fn, ...args) === testValue
+      fn => execMaybeFunction(fn, ...args) === testValue
     )
     const matchedFn = this.fnsStack[index]
 
@@ -40,7 +40,7 @@ const SWITCH_CONTROL_FLOW_STRUCT = Object.seal<SwitchFlow>({
   }
 })
 
-export default function createSwitchControlFlow(switchValue: MaybeFunction): SwitchFlow {
+export default function createSwitchControlFlow<Arguments = AnyValue, Return = AnyValue>(switchValue: MaybeFunction<Arguments, AnyValue>): SwitchFlow<Arguments, Return> {
   const conditionalFlow = ifFlow()
 
   return {
