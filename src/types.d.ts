@@ -1,4 +1,6 @@
 // general types
+import FCF from './index'
+
 export type AnyValue = any // eslint-disable-line
 export type AnyFunction<Return = AnyValue> = (...args: AnyValue[]) => Return
 export type MaybeFunction = AnyValue | AnyFunction
@@ -38,9 +40,5 @@ export interface WhileFlow {
 }
 
 declare module 'fcf' {
-  export interface FCF {
-    if: (initialCondition?: MaybeFunction) => IfFlow;
-    switch: (switchValue: MaybeFunction) => SwitchFlow;
-    while: (controlFunction: MaybeFunction) => WhileFlow;
-  }
+  export default FCF
 }
