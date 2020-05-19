@@ -24,7 +24,7 @@ TODO
 
 
 [license-image]:https://img.shields.io/badge/license-MIT-000000.svg?style=flat-square
-[license-url]:LICENSE.txt
+[license-url]:license.txt
 
 [coverage-image]:https://coveralls.io/repos/github/GianlucaGuarini/fcf/badge.svg
 [coverage-url]:https://coveralls.io/github/GianlucaGuarini/fcf

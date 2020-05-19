@@ -16,7 +16,7 @@ export interface IfFlow<Arguments = AnyValue, Return = AnyValue> extends Conditi
   else: (fn: AnyFunction<Arguments, AnyValue>) => IfFlow;
   elseIf: (fn: MaybeFunction<Arguments, AnyValue>) => IfFlow;
   then: (fn: AnyFunction<Arguments, Return>) => IfFlow;
-  run: (...args: T[]) => IfFlow;
+  run: (...args: Arguments[]) => IfFlow;
 }
 
 export interface SwitchFlow<Arguments = AnyValue, Return = AnyValue> extends ConditionalFlow<Return> {
@@ -25,7 +25,7 @@ export interface SwitchFlow<Arguments = AnyValue, Return = AnyValue> extends Con
   case: (fn: MaybeFunction<Arguments, AnyValue>) => SwitchFlow;
   default: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
   then: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
-  run: (...args: T[]) => SwitchFlow;
+  run: (...args: Arguments[]) => SwitchFlow;
 }
 
 export interface WhileFlow<Arguments = AnyValue, Return = AnyValue> {
@@ -36,7 +36,7 @@ export interface WhileFlow<Arguments = AnyValue, Return = AnyValue> {
   value: Return;
   break: (fn?: AnyFunction<Arguments, AnyValue>) => WhileFlow;
   do: (fn: AnyFunction<Arguments, Return>) => WhileFlow;
-  run: (...args: T[]) => WhileFlow;
+  run: (...args: Arguments[]) => WhileFlow;
 }
 
 declare module 'fcf' {
