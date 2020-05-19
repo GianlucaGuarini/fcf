@@ -26,10 +26,10 @@ export const loopingFns: {start: (fn: AnyFunction) => void; end: (timer: AnyValu
         end: clearTimeout
       }
       : {
-        start: setImmediate,
-        end: clearImmediate
+        start: setImmediate.bind(global),
+        end: clearImmediate.bind(global)
       }
     : {
-      start: requestAnimationFrame,
-      end: cancelAnimationFrame
+      start: requestAnimationFrame.bind(window),
+      end: cancelAnimationFrame.bind(window)
     }
