@@ -9,9 +9,8 @@
     "bench": "node bench/index.js",
     "lint": "eslint tests/* src/* --ext .ts",
     "min": "terser --compress --mangle -o fcf.min.js -- fcf.js",
-    "coverage": "nyc -r lcov -e .ts -x \"*.spec.ts\" npm run test",
+    "coverage": "nyc -r lcov -e .ts npm run test",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "cov-html": "nyc report -r html",
     "prepublishOnly": "npm run test && npm run build && npm run min"
   },
   "files": [
