@@ -30,7 +30,7 @@ export interface WhileFlow {
   private fnsStack: AnyFunction[];
   private isLooping: boolean;
   private timer: AnyValue;
-  private controlFunction: AnyFunction;
+  private controlFunction: MaybeFunction;
   value: AnyValue;
   break: (fn?: AnyFunction) => WhileFlow;
   do: (fn: AnyFunction) => WhileFlow;
@@ -41,6 +41,6 @@ declare module 'fcf' {
   export interface FCF {
     if: (initialCondition?: MaybeFunction) => IfFlow;
     switch: (switchValue: MaybeFunction) => SwitchFlow;
-    while: (controlFunction: AnyFunction) => WhileFlow;
+    while: (controlFunction: MaybeFunction) => WhileFlow;
   }
 }

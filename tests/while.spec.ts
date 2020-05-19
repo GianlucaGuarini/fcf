@@ -9,6 +9,23 @@ describe('while - spec', () => {
       i: 0
     }
 
+    whileFlow(true)
+      .do(() => {
+        counter.i ++
+
+        if (counter.i === 3) {
+          done()
+          return false
+        }
+      })
+      .run()
+  })
+
+  it('simple while loop with function', done => {
+    const counter = {
+      i: 0
+    }
+
     whileFlow(() => true)
       .do(() => {
         counter.i ++
@@ -26,7 +43,7 @@ describe('while - spec', () => {
       i: 0
     }
 
-    whileFlow(() => true)
+    whileFlow(true)
       .do(() => {
         counter.i ++
       })
@@ -42,7 +59,7 @@ describe('while - spec', () => {
       i: 0
     }
 
-    whileFlow(() => true)
+    whileFlow(true)
       .do(noop)
       .do(() => {
         counter.i ++
