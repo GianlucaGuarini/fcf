@@ -30,7 +30,7 @@ export default function whileControlFlow(controlFunction: AnyFunction): WhileFlo
       const loop: () => void = () => {
         this.timer = loopingFns.start(() => {
           // stop the loop if any of the function will return false
-          if (controlFunction(...args) === true && this.fnsStack.every(fn => fn(...args) !== false)) {
+          if (controlFunction(...args) && this.fnsStack.every(fn => fn(...args) !== false)) {
             loop()
           }
         })
