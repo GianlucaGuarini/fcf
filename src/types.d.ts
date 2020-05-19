@@ -2,7 +2,7 @@
 import FCF from './index'
 
 export type AnyValue = any // eslint-disable-line
-export type AnyFunction<Return = AnyValue> = (...args: AnyValue[]) => Return
+export type AnyFunction<Arguments = AnyValue, Return = Arguments> = (...args: Arguments[]) => Return
 export type MaybeFunction = AnyValue | AnyFunction
 
 export interface ConditionalFlow {
@@ -11,32 +11,32 @@ export interface ConditionalFlow {
   value: AnyValue;
 }
 
-export interface IfFlow extends ConditionalFlow {
+export interface IfFlow<Arguments = AnyValue, Return = Arguments> extends ConditionalFlow {
   private fallback?: AnyFunction;
-  else: (fn: AnyFunction) => IfFlow;
-  elseIf: (fn: MaybeFunction) => IfFlow;
-  then: (fn: AnyFunction) => IfFlow;
-  run: (...args: AnyValue[]) => IfFlow;
+  else: (fn: AnyFunction<Arguments, Return>) => IfFlow;
+  elseIf: (fn: MaybeFunction<Arguments, Return>) => IfFlow;
+  then: (fn: AnyFunction<Arguments, Return>) => IfFlow;
+  run: (...args: T[]) => IfFlow;
 }
 
-export interface SwitchFlow extends ConditionalFlow {
+export interface SwitchFlow<Arguments = AnyValue, Return = Arguments> extends ConditionalFlow {
   private conditionalFlow: IfFlow;
-  private switchValue: AnyValue;
-  default: (fn: AnyFunction) => SwitchFlow;
-  case: (fn: MaybeFunction) => SwitchFlow;
-  then: (fn: AnyFunction) => SwitchFlow;
-  run: (...args: AnyValue[]) => SwitchFlow;
+  private switchValue: T;
+  default: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
+  case: (fn: MaybeFunction<Arguments, Return>) => SwitchFlow;
+  then: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
+  run: (...args: T[]) => SwitchFlow;
 }
 
-export interface WhileFlow {
+export interface WhileFlow<Arguments = AnyValue, Return = Arguments> {
   private fnsStack: AnyFunction[];
   private isLooping: boolean;
   private timer: AnyValue;
   private controlFunction: MaybeFunction;
   value: AnyValue;
-  break: (fn?: AnyFunction) => WhileFlow;
-  do: (fn: AnyFunction) => WhileFlow;
-  run: (...args: AnyValue[]) => WhileFlow;
+  break: (fn?: AnyFunction<Arguments, Return>) => WhileFlow;
+  do: (fn: AnyFunction<Arguments, Return>) => WhileFlow;
+  run: (...args: T[]) => WhileFlow;
 }
 
 declare module 'fcf' {
