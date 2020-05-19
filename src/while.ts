@@ -2,6 +2,20 @@ import { AnyFunction, AnyValue, WhileFlow } from './types'
 import { MULTIPLE_BREAK_LOOP_CALLS_ERROR, MULTIPLE_RUN_CALLS_ERROR } from './constants'
 import { loopingFns, panic } from './utils'
 
+const loop: (
+  scope: WhileFlow,
+  controlFunction: AnyFunction,
+  ...args: AnyValue[]
+) => void = (scope, controlFunction, ...args) => {
+  scope.timer = loopingFns.start(() => {
+    scope.value = controlFunction(...args)
+    // stop the loop if any of the function will return false
+    if (scope.value && scope.fnsStack.every(fn => fn(...args) !== false)) {
+      loop(scope, controlFunction, ...args)
+    }
+  })
+}
+
 export default function whileControlFlow(controlFunction: AnyFunction): WhileFlow {
   return {
     value: undefined,
@@ -31,17 +45,7 @@ export default function whileControlFlow(controlFunction: AnyFunction): WhileFlo
 
       this.isLooping = true
 
-      const loop: () => void = () => {
-        this.timer = loopingFns.start(() => {
-          this.value = controlFunction(...args)
-          // stop the loop if any of the function will return false
-          if (this.value && this.fnsStack.every(fn => fn(...args) !== false)) {
-            loop()
-          }
-        })
-      }
-
-      loop()
+      loop(this, controlFunction, ...args)
 
       return this
     }
