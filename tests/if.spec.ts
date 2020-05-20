@@ -153,7 +153,7 @@ describe('if - spec', () => {
   })
 
   it('function if else-if condition arguments', done => {
-    ifFlow(() => false)
+    ifFlow<[string]>(() => false)
       .then(() => {
         throw new Error('you shouldn\'t get here')
       })
@@ -165,7 +165,7 @@ describe('if - spec', () => {
 
         return true
       })
-      .then((greeting: string) => {
+      .then((greeting) => {
         expect(greeting).to.be.equal('hello')
         done()
       })

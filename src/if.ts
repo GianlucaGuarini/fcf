@@ -2,7 +2,7 @@ import { AnyValue, IfFlow, MaybeFunction } from './types'
 import { CONDITION_STACK_INSUFFICENT_ERROR, FN_STACK_OVERFLOW_ERROR, MULTIPLE_FALLBACK_FN_ERROR } from './constants'
 import { execMaybeFunction, isUndefined, panic } from './utils'
 
-const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow>({
+const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow<AnyValue[]>>({
   value: undefined,
   fallback: undefined,
   fnsStack: [],
@@ -48,7 +48,7 @@ const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow>({
   }
 })
 
-export default function createIfControlFlow<Arguments = AnyValue, Return = AnyValue>(initialCondition?: MaybeFunction<Arguments, AnyValue>): IfFlow<Arguments, Return> {
+export default function createIfControlFlow<Arguments extends AnyValue[], Return = AnyValue, InitialCondition = MaybeFunction<Arguments>>(initialCondition?: InitialCondition): IfFlow<Arguments, Return> {
   return {
     ...IF_CONTROL_FLOW_STRUCT,
     fnsStack: [],

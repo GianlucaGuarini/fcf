@@ -43,7 +43,7 @@ describe('switch - spec', () => {
   })
 
   it('simple switch value', done => {
-    const {value} = switchFlow(true)
+    switchFlow(true)
       .case(true)
       .then(() => done())
       .case(false)
@@ -51,8 +51,6 @@ describe('switch - spec', () => {
         throw new Error('you shouldn\'t get here')
       })
       .run()
-
-    expect(value).to.be.equal('hello')
   })
 
   it('simple switch with no matches value', () => {
@@ -164,7 +162,7 @@ describe('switch - spec', () => {
   })
 
   it('function switch with multiple cases and arguments', done => {
-    switchFlow((greeting: string) => greeting)
+    switchFlow<[string]>((greeting: string) => greeting)
       .case(true)
       .then(() => {
         throw new Error('you shouldn\'t get here')
@@ -177,7 +175,7 @@ describe('switch - spec', () => {
 
         return greeting
       })
-      .then((greeting: string) => {
+      .then((greeting) => {
         expect(greeting).to.be.equal('hello')
         done()
       })

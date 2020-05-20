@@ -2,7 +2,7 @@ import { AnyValue, MaybeFunction, SwitchFlow } from './types'
 import { execMaybeFunction } from './utils'
 import ifFlow from './if'
 
-const SWITCH_CONTROL_FLOW_STRUCT = Object.seal<SwitchFlow>({
+const SWITCH_CONTROL_FLOW_STRUCT = Object.seal<SwitchFlow<AnyValue[]>>({
   value: undefined,
   switchValue: undefined,
   conditionalFlow: ifFlow(),
@@ -40,7 +40,7 @@ const SWITCH_CONTROL_FLOW_STRUCT = Object.seal<SwitchFlow>({
   }
 })
 
-export default function createSwitchControlFlow<Arguments = AnyValue, Return = AnyValue>(switchValue: MaybeFunction<Arguments, AnyValue>): SwitchFlow<Arguments, Return> {
+export default function createSwitchControlFlow<Arguments extends AnyValue[], Return = AnyValue, SwitchValue = MaybeFunction<Arguments>>(switchValue: SwitchValue): SwitchFlow<Arguments, Return> {
   const conditionalFlow = ifFlow()
 
   return {

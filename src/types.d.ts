@@ -2,41 +2,41 @@
 import FCF from './index'
 
 export type AnyValue = any // eslint-disable-line
-export type AnyFunction<Arguments = AnyValue, Return = AnyValue> = (value?: Arguments, ...args: AnyValue[]) => Return
-export type MaybeFunction<Arguments, Return> = AnyValue | AnyFunction<Arguments, Return>
+export type AnyFunction<Arguments extends AnyValue[], Return = AnyValue> = (...args: Arguments) => Return
+export type MaybeFunction<Arguments extends AnyValue[], Return = AnyValue> = AnyValue | AnyFunction<Arguments, Return>;
 
-export interface ConditionalFlow<Value = AnyValue> {
-  private fnsStack: AnyFunction[];
-  private conditionsStack: MaybeFunction[];
-  value: Value;
+export interface ConditionalFlow<Arguments extends AnyValue[], FlowValue = AnyValue> {
+  private fnsStack: AnyFunction<Arguments, FlowValue>[];
+  private conditionsStack: MaybeFunction<Arguments>[];
+  value: FlowValue;
 }
 
-export interface IfFlow<Arguments = AnyValue, Return = AnyValue> extends ConditionalFlow<Return> {
-  private fallback?: AnyFunction;
-  else: (fn: AnyFunction<Arguments, AnyValue>) => IfFlow;
-  elseIf: (fn: MaybeFunction<Arguments, AnyValue>) => IfFlow;
-  then: (fn: AnyFunction<Arguments, Return>) => IfFlow;
-  run: (value?: Arguments, ...args: AnyValue[]) => IfFlow;
+export interface IfFlow<Arguments extends AnyValue[], FlowValue = AnyValue> extends ConditionalFlow<Arguments, FlowValue> {
+  private fallback?: AnyFunction<Arguments, FlowValue>;
+  else: (fn: AnyFunction<Arguments>) => IfFlow<Arguments, FlowValue>;
+  elseIf: (fn: MaybeFunction<Arguments>) => IfFlow<Arguments, FlowValue>;
+  then: (fn: AnyFunction<Arguments, FlowValue>) => IfFlow<Arguments, FlowValue>;
+  run: (...args: Arguments) => IfFlow<Arguments, FlowValue>;
 }
 
-export interface SwitchFlow<Arguments = AnyValue, Return = AnyValue> extends ConditionalFlow<Return> {
-  private conditionalFlow: IfFlow;
-  private switchValue: Return;
-  case: (fn: MaybeFunction<Arguments, AnyValue>) => SwitchFlow;
-  default: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
-  then: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
-  run: (value?: Arguments, ...args: AnyValue[]) => SwitchFlow;
+export interface SwitchFlow<Arguments extends AnyValue[], FlowValue = AnyValue> extends ConditionalFlow<Arguments, FlowValue> {
+  private conditionalFlow: IfFlow<Arguments, FlowValue>;
+  private switchValue: AnyValue;
+  case: (fn: MaybeFunction<Arguments>) => SwitchFlow<Arguments, FlowValue>;
+  default: (fn: AnyFunction<Arguments, FlowValue>) => SwitchFlow<Arguments, FlowValue>;
+  then: (fn: AnyFunction<Arguments, FlowValue>) => SwitchFlow<Arguments, FlowValue>;
+  run: (...args: Arguments) => SwitchFlow<Arguments, FlowValue>;
 }
 
-export interface WhileFlow<Arguments = AnyValue, Return = AnyValue> {
-  private fnsStack: AnyFunction[];
+export interface WhileFlow<Arguments extends AnyValue[], FlowValue = AnyValue> {
+  private fnsStack: AnyFunction<Arguments, FlowValue>[];
   private isLooping: boolean;
   private timer: AnyValue;
-  private controlFunction: MaybeFunction<Arguments, Return>;
-  value: Return;
-  break: (fn?: AnyFunction<Arguments, AnyValue>) => WhileFlow;
-  do: (fn: AnyFunction<Arguments, Return>) => WhileFlow;
-  run: (value?: Arguments, ...args: AnyValue[]) => WhileFlow;
+  private controlFunction: MaybeFunction<Arguments, FlowValue>;
+  value: FlowValue;
+  break: (fn?: AnyFunction<Arguments>) => WhileFlow<Arguments, FlowValue>;
+  do: (fn: AnyFunction<Arguments, FlowValue>) => WhileFlow<Arguments, FlowValue>;
+  run: (...args: Arguments) => WhileFlow<Arguments, FlowValue>;
 }
 
 declare module 'fcf' {
