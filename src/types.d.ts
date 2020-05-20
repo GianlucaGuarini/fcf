@@ -2,7 +2,7 @@
 import FCF from './index'
 
 export type AnyValue = any // eslint-disable-line
-export type AnyFunction<Arguments = AnyValue, Return = AnyValue> = (...args: Arguments[]) => Return
+export type AnyFunction<Arguments = AnyValue, Return = AnyValue> = (value?: Arguments, ...args: AnyValue[]) => Return
 export type MaybeFunction<Arguments, Return> = AnyValue | AnyFunction<Arguments, Return>
 
 export interface ConditionalFlow<Value = AnyValue> {
@@ -16,16 +16,16 @@ export interface IfFlow<Arguments = AnyValue, Return = AnyValue> extends Conditi
   else: (fn: AnyFunction<Arguments, AnyValue>) => IfFlow;
   elseIf: (fn: MaybeFunction<Arguments, AnyValue>) => IfFlow;
   then: (fn: AnyFunction<Arguments, Return>) => IfFlow;
-  run: (...args: Arguments[]) => IfFlow;
+  run: (value?: Arguments, ...args: AnyValue[]) => IfFlow;
 }
 
 export interface SwitchFlow<Arguments = AnyValue, Return = AnyValue> extends ConditionalFlow<Return> {
   private conditionalFlow: IfFlow;
-  private switchValue: T;
+  private switchValue: Return;
   case: (fn: MaybeFunction<Arguments, AnyValue>) => SwitchFlow;
   default: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
   then: (fn: AnyFunction<Arguments, Return>) => SwitchFlow;
-  run: (...args: Arguments[]) => SwitchFlow;
+  run: (value?: Arguments, ...args: AnyValue[]) => SwitchFlow;
 }
 
 export interface WhileFlow<Arguments = AnyValue, Return = AnyValue> {
@@ -36,7 +36,7 @@ export interface WhileFlow<Arguments = AnyValue, Return = AnyValue> {
   value: Return;
   break: (fn?: AnyFunction<Arguments, AnyValue>) => WhileFlow;
   do: (fn: AnyFunction<Arguments, Return>) => WhileFlow;
-  run: (...args: Arguments[]) => WhileFlow;
+  run: (value?: Arguments, ...args: AnyValue[]) => WhileFlow;
 }
 
 declare module 'fcf' {
