@@ -97,11 +97,20 @@ console.log(value)
 
 `fcf.if` provides an alternative to the native Javascript `if` statement.
 
+```js
+fcf
+  .if(true)
+  .then(() => {
+    console.log('hello')
+  })
+  .run()
+```
+
 Any `fcf.if` object has the following properties
   - `else(function)` - provide a fallback method if none of the conditions are matched
   - `elseIf(function|any)` - add a new condition that must be followed by a `then` call
-  - `then(function)` - add a callback to a previously set condition and set the `value` property
-  - `value` - value returned by the first `then` call matching
+  - `then(function)` - add a callback to a previous condition and set the `value` property
+  - `value` - value returned by the first matching `then` call
   - `run(...args: any[])` - run the condition flow passing eventually arguments to it
 
 <details>
@@ -155,7 +164,7 @@ fcf
 
 ### functional conditions
 
-The `fcf.if` `elseIf` and `if` methods accept also functions as argument.
+The `fcf.if` and `fcf.if.elseIf` methods accept also functions as argument.
 
 ```js
 fcf
@@ -172,7 +181,7 @@ fcf
 
 ### functional conditions with arguments
 
-The `fcf.if` `run` method allows you to pass arguments into your ifFlow chain
+The `fcf.if.run` method allows you to pass arguments into your ifFlow chain
 
 ```js
 fcf
@@ -210,7 +219,132 @@ console.log(value) // hello
 
 ## SwitchFlow - fcf.switch
 
-TODO
+`fcf.switch` provides an alternative to the native Javascript `switch` statement.
+It normalizes also the default `switch` behavior avoiding the need of `break` statements: the first `case` matched will avoid the evaluation of the others
+
+```js
+fcf
+  .switch(greeting => greeting)
+  .case('hello')
+  .then(() => {
+    console.log('hello')
+  })
+  .case('goodbye')
+  .then(() => {
+    console.log('goodbye')
+  })
+  .default(() => {
+    console.log('¯\\_(ツ)_/¯ ')
+  })
+  .run('goodbye')
+```
+
+Any `fcf.switch` object has the following properties
+  - `default(function)` - provide a fallback method if none of the cases are matched
+  - `case(function|any)` - add a new case that must be followed by a `then` call
+  - `then(function)` - add a callback to a previous `case` call and can set the `value` property
+  - `value` - value returned by the first matching `then` call
+  - `run(...args: any[])` - run the condition flow passing eventually arguments to it
+
+<details>
+ <summary>Examples</summary>
+
+### simple
+
+The simplest `fcf.switch` might look like this:
+
+```js
+fcf
+  .switch(greeting => greeting)
+  .case('hello')
+  .then(() => {
+    console.log('hello')
+  })
+  .case('goodbye')
+  .then(() => {
+    console.log('goodbye')
+  })
+  .default(() => {
+    console.log('¯\\_(ツ)_/¯ ')
+  })
+  .run('goodbye')
+```
+
+### switch-default
+
+The `default` method works like for normal `switch` statements: if no `case` is matched the `default` method will be called.
+
+```js
+fcf
+  .switch(greeting => greeting)
+  .case('goodbye')
+  .then(() => {
+    console.log('you will never get here')
+  })
+  .default(greeting => {
+    console.log(greeting)
+  })
+  .run('hello')
+```
+
+### functional cases
+
+The `fcf.switch` and `fcf.switch.case` methods accept also functions as argument.
+
+```js
+fcf
+  .switch(greeting => greeting)
+  .case(() => 'goodbye')
+  .then(() => {
+    console.log('goodbye')
+  })
+  .case(() => 'hello')
+  .then(() => {
+    console.log('hello')
+  })
+  .run('hello')
+```
+
+### functional cases with arguments
+
+The `fcf.switch.run` method allows you to pass arguments into your switchFlow chain
+
+```js
+fcf
+  .switch(greeting => greeting)
+  .case(greeting => greeting === 'goodbye')
+  .then(() => {
+    console.log('goodbye')
+  })
+  .case(greeting => greeting === 'hello')
+  .then(() => {
+    console.log('hello')
+  })
+  .run('hello')
+```
+
+### value property
+
+The `fcf.switch` objects will retain the value returned by the first `then` call matched
+
+```js
+const {value} = fcf
+  .switch(greeting => greeting)
+  .case(greeting => greeting === 'goodbye')
+  .then(() => {
+    return 'goodbye'
+  })
+  .case(greeting => greeting === 'hello')
+  .then(() => {
+    return 'hello'
+  })
+  .run('hello')
+
+console.log(value) // hello
+```
+</details>
+
+
 
 ## WhileFlow - fcf.while
 
