@@ -18,17 +18,25 @@ It aims at providing a functional and semantic alternative to some native Javasc
 Keywords like `if` or `switch` are imperative statements that normally must be combined to functions to give them a semantic meaning for example:
 
 ```js
-// imperative (no semantic)
+// BAD imperative (non semantic)
 if (document.visibilityState === 'visible') {
-  // do stuff
+  // do stuff with visible document
+} else if(document.visibilityState === 'hidden') {
+  // do stuff with hidden document
 }
+```
 
-// semantic function
+```js
+// a bit better... with a semantic functions
 const isDocumentVisible = () => document.visibilityState === 'visible'
+const isDocumentHidden = () => document.visibilityState === 'hidden'
 
+// notice that here that we didn't store the value of the conditions
+// for that we need to introduce new variables
 if (isDocumentVisible()) {
-  // do stuff
-  // notice that here we don't know the value of document.visibilityState
+  // do stuff with visible document
+} else if (isDocumentHidden()) {
+  // do stuff with hidden document
 }
 ```
 
@@ -38,16 +46,19 @@ With FCF we can write the example above in a more semantic way retaining the val
 import fcf from 'fcf'
 
 const documentVisibleCondition = fcf
-  .if(documentVisibilityState => documentVisibilityState === 'visible')
+  .if(value => value === 'visible')
   .then(() => {
-    // do stuff
+    // do stuff with visible document
+  })
+  .elseIf(value => value === 'hidden')
+  .then(() => {
+    // do stuff with hidden document
   })
 
 // check the condition
 const {value} = documentVisibleCondition.run(document.visibilityState)
 
-// the value returned by the first condition matched
-// in this case documentVisibilityState === 'visible'
+// the value returned by the first condition matched (true|false)
 console.log(value)
 ```
 
@@ -59,16 +70,19 @@ import fcf from 'fcf'
 const documentVisibleCondition = fcf
   // with `[string]` you can define the type of arguments provided to the 'run' function
   // `boolean` is the value retained by the fcf.if object
-  .if<[string], boolean>(documentVisibilityState => documentVisibilityState === 'visible')
+  .if<[string], boolean>(value => value === 'visible')
   .then(() => {
-    // do stuff
+    // do stuff with visible document
+  })
+  .elseIf(value => value === 'hidden')
+  .then(() => {
+    // do stuff with hidden document
   })
 
 // check the condition
 const {value} = documentVisibleCondition.run(document.visibilityState)
 
-// the value returned by the first condition matched
-// in this case documentVisibilityState === 'visible'
+// will be of type "boolean"
 console.log(value)
 ```
 
