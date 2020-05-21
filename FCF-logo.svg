@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="675px" height="62px" viewBox="0 0 675 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>λControlFlow</title>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="CourierNewPS-BoldMT, Courier New" font-size="94" font-weight="bold">
-        <text id="λControlFlow">
-            <tspan x="-2" y="60" fill="#CF005A">λ</tspan>
-            <tspan x="54.4091797" y="60" fill="#0091FF">C</tspan>
-            <tspan x="110.818359" y="60" fill="#455A64">ontrol</tspan>
-            <tspan x="449.273438" y="60" fill="#0091FF">F</tspan>
-            <tspan x="505.682617" y="60" fill="#455A64">low</tspan>
+<svg width="900px" height="249px" viewBox="0 0 900 249" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Slice</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <text id="λControlFlow" font-family="CourierNewPS-BoldMT, Courier New" font-size="94" font-weight="bold">
+            <tspan x="112" y="150" fill="#CF005A">λ</tspan>
+            <tspan x="168.40918" y="150" fill="#0091FF">C</tspan>
+            <tspan x="224.818359" y="150" fill="#455A64">ontrol</tspan>
+            <tspan x="563.273438" y="150" fill="#0091FF">F</tspan>
+            <tspan x="619.682617" y="150" fill="#455A64">low</tspan>
         </text>
+        <path d="" id="Path" stroke="#979797"></path>
     </g>
 </svg>
