@@ -170,7 +170,7 @@ describe('switch - spec', () => {
       .default(() => {
         throw new Error('you shouldn\'t get here')
       })
-      .case((greeting: string) => {
+      .case((greeting) => {
         expect(greeting).to.be.equal('hello')
 
         return greeting

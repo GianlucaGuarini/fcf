@@ -104,6 +104,109 @@ Any `fcf.if` object has the following properties
   - `value` - value returned by the first `then` call matching
   - `run(...args: any[])` - run the condition flow passing eventually arguments to it
 
+<details>
+ <summary>Examples</summary>
+
+### simple
+
+The simplest `fcf.if` might look like this:
+
+```js
+fcf
+  .if(true)
+  .then(() => {
+    console.log('hello')
+  })
+  .run()
+```
+
+### if-else
+
+The `else` method works like for normal `if` statements
+
+```js
+fcf
+  .if(false)
+  .then(() => {
+    console.log('you will never get here')
+  })
+  .else(() => {
+    console.log('hello')
+  })
+  .run()
+```
+
+### if-else-if
+
+With the `elseIf` method you can add new conditions
+
+```js
+fcf
+  .if(true)
+  .then(() => {
+    console.log('you will never get here')
+  })
+  .elseIf(false)
+  .then(() => {
+    console.log('hello')
+  })
+  .run()
+```
+
+### functional conditions
+
+The `fcf.if` `elseIf` and `if` methods accept also functions as argument.
+
+```js
+fcf
+  .if(() => true)
+  .then(() => {
+    console.log('you will never get here')
+  })
+  .elseIf(() => false)
+  .then(() => {
+    console.log('hello')
+  })
+  .run()
+```
+
+### functional conditions with arguments
+
+The `fcf.if` `run` method allows you to pass arguments into your ifFlow chain
+
+```js
+fcf
+  .if(greeting => greeting === 'goodbye')
+  .then(() => {
+    console.log('goodbye')
+  })
+  .elseIf(greeting => greeting === 'hello')
+  .then(() => {
+    console.log('hello')
+  })
+  .run('hello')
+```
+
+### value property
+
+The `fcf.if` objects will retain the value returned by the first `then` call matched
+
+```js
+const {value} = fcf
+  .if(greeting => greeting === 'goodbye')
+  .then(() => {
+    return 'goodbye'
+  })
+  .elseIf(greeting => greeting === 'hello')
+  .then(() => {
+    return 'hello'
+  })
+  .run('hello')
+
+console.log(value) // hello
+```
+</details>
+
 
 ## SwitchFlow - fcf.switch
 
