@@ -1,6 +1,6 @@
 # FCF
 
-<img alt="FCF.js" src="https://cdn.rawgit.com/GianlucaGuarini/fcf/master/FCF-logo.svg" width="100%"/>
+<img alt="FCF.js" src="https://raw.githubusercontent.com/GianlucaGuarini/fcf/master/FCF-logo.svg" width="100%"/>
 
 Monadic Functional Control Flow Micro-Library for Javascript
 
