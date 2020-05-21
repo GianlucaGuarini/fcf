@@ -1,9 +1,6 @@
 # FCF
 
-
-<img alt="FCF.js" src="https://raw.githubusercontent.com/GianlucaGuarini/fcf/master/FCF-logo.svg" width="100%"/>
-
-Monadic Functional Control Flow Micro-Library for Javascript
+# <img alt="FCF.js" src="https://raw.githubusercontent.com/GianlucaGuarini/fcf/master/FCF-logo.svg" width="100%"/>
 
 [![Build Status][travis-image]][travis-url]
 [![MIT License][license-image]][license-url]
@@ -12,6 +9,69 @@ Monadic Functional Control Flow Micro-Library for Javascript
 [![Coverage Status][coverage-image]][coverage-url]
 ![FCF Size][lib-size]
 [![Code Quality][codeclimate-image]][codeclimate-url]
+
+# What is FCF?
+
+FCF is a Monadic Functional Control Flow Micro-Library for Javascript written in Typescript.
+It aims at providing a functional and semantic alternative to some native Javascript control flow statements like `if`, `switch` and `while`.
+
+Keywords like `if` or `switch` are imperative statements that normally must be combined to functions to give them a semantic meaning for example:
+
+```js
+// imperative (no semantic)
+if (document.visibilityState === 'visible') {
+  // do stuff
+}
+
+// semantic function
+const isDocumentVisible = () => document.visibilityState === 'visible'
+
+if (isDocumentVisible()) {
+  // do stuff
+  // notice that here we don't know the value of document.visibilityState
+}
+```
+
+With FCF we can write the example above in a more semantic way retaining the value of our conditional statement:
+
+```js
+import fcf from 'fcf'
+
+const documentVisibleCondition = fcf
+  .if(documentVisibilityState => documentVisibilityState === 'visible')
+  .then(() => {
+    // do stuff
+  })
+
+// check the condition
+const {value} = documentVisibleCondition.run(document.visibilityState)
+
+// the value returned by the first condition matched
+// in this case documentVisibilityState === 'visible'
+console.log(value)
+```
+
+Notice that FCF is strictly typed so you can rewrite the example above in typescript in this way:
+
+```ts
+import fcf from 'fcf'
+
+const documentVisibleCondition = fcf
+  // with `[string]` you can define the type of arguments provided to the 'run' function
+  // `boolean` is the value retained by the fcf.if object
+  .if<[string], boolean>(documentVisibilityState => documentVisibilityState === 'visible')
+  .then(() => {
+    // do stuff
+  })
+
+// check the condition
+const {value} = documentVisibleCondition.run(document.visibilityState)
+
+// the value returned by the first condition matched
+// in this case documentVisibilityState === 'visible'
+console.log(value)
+```
+
 
 ## IfFlow
 
@@ -24,6 +84,11 @@ TODO
 ## WhileFlow
 
 TODO
+
+## TODO
+
+- Provide async functions support
+- Add more control flow methods
 
 
 [license-image]:https://img.shields.io/badge/license-MIT-000000.svg?style=flat-square
