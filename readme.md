@@ -45,20 +45,24 @@ With FCF we can write the example above in a more semantic way retaining the val
 ```js
 import fcf from 'fcf'
 
-const documentVisibleCondition = fcf
+const checkIfApplicationIsActive = fcf
   .if(value => value === 'visible')
   .then(() => {
     // do stuff with visible document
+
+    return 'active'
   })
   .elseIf(value => value === 'hidden')
   .then(() => {
     // do stuff with hidden document
+
+    return 'standby'
   })
 
 // check the condition
-const {value} = documentVisibleCondition.run(document.visibilityState)
+const {value} = checkIfApplicationIsActive.run(document.visibilityState)
 
-// the value returned by the first condition matched (true|false)
+// the value returned by the first `then` call matched ('active'|'standby')
 console.log(value)
 ```
 
@@ -67,35 +71,45 @@ Notice that FCF is strictly typed so you can rewrite the example above in typesc
 ```ts
 import fcf from 'fcf'
 
-const documentVisibleCondition = fcf
+const checkIfApplicationIsActive = fcf
   // with `[string]` you can define the type of arguments provided to the 'run' function
-  // `boolean` is the value retained by the fcf.if object
-  .if<[string], boolean>(value => value === 'visible')
+  // `string` is the value retained by the fcf.if object
+  .if<[string], string>(value => value === 'visible')
   .then(() => {
     // do stuff with visible document
+    return 'active'
   })
+  // `value` here is of type `string`
   .elseIf(value => value === 'hidden')
   .then(() => {
     // do stuff with hidden document
+    return 'standby'
   })
 
 // check the condition
-const {value} = documentVisibleCondition.run(document.visibilityState)
+const {value} = checkIfApplicationIsActive.run(document.visibilityState)
 
-// will be of type "boolean"
+// will be of type "string"
 console.log(value)
 ```
 
+## IfFlow - fcf.if
 
-## IfFlow
+`fcf.if` provides an alternative to the native Javascript `if` statement.
+
+Any `fcf.if` object has the following properties
+  - `else(function)` - provide a fallback method if none of the conditions are matched
+  - `elseIf(function|any)` - add a new condition that must be followed by a `then` call
+  - `then(function)` - add a callback to a previously set condition and set the `value` property
+  - `value` - value returned by the first `then` call matching
+  - `run(...args: any[])` - run the condition flow passing eventually arguments to it
+
+
+## SwitchFlow - fcf.switch
 
 TODO
 
-## SwitchFlow
-
-TODO
-
-## WhileFlow
+## WhileFlow - fcf.while
 
 TODO
 
