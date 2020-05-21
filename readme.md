@@ -15,6 +15,8 @@
 FCF is a Monadic Functional Control Flow Micro-Library for Javascript written in Typescript.
 It aims at providing a functional and semantic alternative to some native Javascript control flow statements like `if`, `switch` and `while`.
 
+## Native Imperative Flow Statements
+
 Keywords like `if` or `switch` are imperative statements that normally must be combined to functions to give them a semantic meaning for example:
 
 ```js
@@ -40,7 +42,9 @@ if (isDocumentVisible()) {
 }
 ```
 
-With FCF we can write the example above in a more semantic way retaining the value of our conditional statement:
+## Functional Control Flow
+
+With FCF we can write your program flow in a more semantic way retaining the value of its conditional statement:
 
 ```js
 import fcf from 'fcf'
@@ -93,6 +97,48 @@ const {value} = checkIfApplicationIsActive.run(document.visibilityState)
 console.log(value)
 ```
 
+Another big advantage of FCF is that its API is composable:
+
+```js
+const greetUserByRole = fcf
+  .switch(user => user.role)
+  .case('power')
+  .then(() => {
+    console.log('Good morning power user')
+  })
+  .case('base')
+  .then(() => {
+    console.log('hello base user')
+  })
+  .default(() => {
+    console.log('hello base user')
+  })
+
+const checkUser = fcf
+  .if(user => user.isLogged)
+  .then(user => greetUserByRole.run(user))
+  .else(() => {
+    console.log('you are not logged in')
+  })
+
+checkUser.run({
+  role: 'power',
+  isLogged: true
+})
+
+checkUser.run({
+  role: 'base',
+  isLogged: true
+})
+
+checkUser.run({
+  role: 'power',
+  isLogged: false
+})
+```
+
+[Check Live the example above](https://plnkr.co/edit/GXPF1W04RWC9WLbf)
+
 ## IfFlow - fcf.if
 
 `fcf.if` provides an alternative to the native Javascript `if` statement.
@@ -107,9 +153,9 @@ fcf
 ```
 
 Any `fcf.if` object has the following properties
-  - `else(function)` - provide a fallback method if none of the conditions are matched
-  - `elseIf(function|any)` - add a new condition that must be followed by a `then` call
-  - `then(function)` - add a callback to a previous condition and set the `value` property
+  - `else(fn: function)` - provide a fallback method if none of the conditions are matched
+  - `elseIf(fn: function|any)` - add a new condition that must be followed by a `then` call
+  - `then(fn: function)` - add a callback to a previous condition and set the `value` property
   - `value` - value returned by the first matching `then` call
   - `run(...args: any[])` - run the condition flow passing eventually arguments to it
 
@@ -240,9 +286,9 @@ fcf
 ```
 
 Any `fcf.switch` object has the following properties
-  - `default(function)` - provide a fallback method if none of the cases are matched
-  - `case(function|any)` - add a new case that must be followed by a `then` call
-  - `then(function)` - add a callback to a previous `case` call and can set the `value` property
+  - `default(fn: function)` - provide a fallback method if none of the `case` is matched
+  - `case(fn: function|any)` - add a new case that must be followed by a `then` call
+  - `then(fn: function)` - add a callback to a previous `case` call and can set the `value` property
   - `value` - value returned by the first matching `then` call
   - `run(...args: any[])` - run the condition flow passing eventually arguments to it
 
@@ -348,7 +394,128 @@ console.log(value) // hello
 
 ## WhileFlow - fcf.while
 
-TODO
+`fcf.while` provides an alternative to the native Javascript `while` statement.
+It normalizes its behavior in browsers and node using `requestAnimationFrame` or `setImmediate` to run loops
+
+```js
+fcf
+  .while(true)
+  .do(() => {
+    console.log('hello')
+  })
+  .run()
+```
+
+Any `fcf.while` object has the following properties
+  - `do(fn: function)` - add a callback that will be called forever when the whileFlow is running. If a `do` function will return `false` the while flow will be stopped
+  - `break(fn?: function)` - if called, it will stop the while flow. It accepts eventually a callback to call when the flow will be stopped
+  - `value` - value returned by the initial control function
+  - `run(...args: any[])` - run the while flow passing eventually arguments to it
+
+<details>
+ <summary>Examples</summary>
+
+ ### simple
+
+The simplest `fcf.while` might look like this:
+
+```js
+fcf
+  .while(true)
+  .do(() => {
+    console.log('hello')
+  })
+  .run()
+```
+
+### break
+
+The `break` allows to stop the while flow
+
+```js
+const loggerFlow = fcf
+  .while(true)
+  .do(() => {
+    console.log('hello')
+  })
+  .run()
+
+// stop the while loop after 1 second
+setTimeout(() => {
+  loggerFlow.break()
+}, 1000)
+```
+
+### functional control function
+
+The `fcf.while` method accept also functions as argument.
+
+```js
+fcf
+  // it will log until the document.visibilityState === 'visible'
+  // otherwise it will be stopped
+  .while(() => document.visibilityState === 'visible')
+  .do(() => {
+    console.log('hello')
+  })
+  .run()
+```
+
+### stop the while flow from a do function
+
+The `fcf.while.do` can stop the while flow returning `false`
+
+```js
+fcf
+  .while(true)
+  // it will log only once and then stop the while flow
+  .do(() => {
+    console.log('hello')
+    return false
+  })
+  .run()
+```
+
+### functional with arguments
+
+The `fcf.while.run` method allows you to pass arguments into your whileFlow chain
+
+```js
+const greetUser = fcf
+  .switch(user => user.role)
+  .case('power')
+  .then(() => {
+    console.log('Good morning power user')
+  })
+  .then('base')
+  .then(() => {
+    console.log('hello base user')
+  })
+  .default(() => {
+    console.log('hello base user')
+  })
+
+fcf
+  .while(true)
+  .do(user => greetUser.run(user))
+  .run(user)
+```
+
+### value property
+
+The `fcf.while` objects will retain the value returned by its initial control function
+
+```js
+const {value} = fcf
+  .while(true)
+  .do(() => {
+    console.log('hello')
+  })
+  .run('hello')
+
+console.log(value) // true
+```
+</details>
 
 ## TODO
 
