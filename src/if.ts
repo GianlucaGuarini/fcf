@@ -48,7 +48,7 @@ const IF_CONTROL_FLOW_STRUCT = Object.seal<IfFlow<AnyValue[]>>({
   }
 })
 
-export default function createIfControlFlow<Arguments extends AnyValue[], Return = AnyValue, InitialCondition = MaybeFunction<Arguments>>(initialCondition?: InitialCondition): IfFlow<Arguments, Return> {
+export default function createIfControlFlow<Arguments extends AnyValue[], Return = AnyValue, InitialCondition = MaybeFunction<Arguments, AnyValue, AnyValue>>(initialCondition?: InitialCondition): IfFlow<Arguments, Return> {
   return {
     ...IF_CONTROL_FLOW_STRUCT,
     fnsStack: [],

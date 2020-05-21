@@ -40,7 +40,7 @@ const SWITCH_CONTROL_FLOW_STRUCT = Object.seal<SwitchFlow<AnyValue[]>>({
   }
 })
 
-export default function createSwitchControlFlow<Arguments extends AnyValue[], Return = AnyValue, SwitchValue = MaybeFunction<Arguments>>(switchValue: SwitchValue): SwitchFlow<Arguments, Return> {
+export default function createSwitchControlFlow<Arguments extends AnyValue[], Return = AnyValue, SwitchValue = MaybeFunction<Arguments, AnyValue, AnyValue>>(switchValue: SwitchValue): SwitchFlow<Arguments, Return> {
   const conditionalFlow = ifFlow()
 
   return {

@@ -3,7 +3,7 @@ import FCF from './index'
 
 export type AnyValue = any // eslint-disable-line
 export type AnyFunction<Arguments extends AnyValue[], Return = AnyValue> = (...args: Arguments) => Return
-export type MaybeFunction<Arguments extends AnyValue[], Return = AnyValue> = AnyValue | AnyFunction<Arguments, Return>;
+export type MaybeFunction<Arguments extends AnyValue[], Return = AnyValue, T extends AnyValue> = T | AnyFunction<Arguments, Return>;
 
 export interface ConditionalFlow<Arguments extends AnyValue[], FlowValue = AnyValue> {
   private fnsStack: AnyFunction<Arguments, FlowValue>[];
@@ -14,7 +14,7 @@ export interface ConditionalFlow<Arguments extends AnyValue[], FlowValue = AnyVa
 export interface IfFlow<Arguments extends AnyValue[], FlowValue = AnyValue> extends ConditionalFlow<Arguments, FlowValue> {
   private fallback?: AnyFunction<Arguments, FlowValue>;
   else: (fn: AnyFunction<Arguments>) => IfFlow<Arguments, FlowValue>;
-  elseIf: (fn: MaybeFunction<Arguments>) => IfFlow<Arguments, FlowValue>;
+  elseIf: <T>(fn: MaybeFunction<Arguments, AnyValue, T>) => IfFlow<Arguments, FlowValue>;
   then: (fn: AnyFunction<Arguments, FlowValue>) => IfFlow<Arguments, FlowValue>;
   run: (...args: Arguments) => IfFlow<Arguments, FlowValue>;
 }
@@ -22,7 +22,7 @@ export interface IfFlow<Arguments extends AnyValue[], FlowValue = AnyValue> exte
 export interface SwitchFlow<Arguments extends AnyValue[], FlowValue = AnyValue> extends ConditionalFlow<Arguments, FlowValue> {
   private conditionalFlow: IfFlow<Arguments, FlowValue>;
   private switchValue: AnyValue;
-  case: (fn: MaybeFunction<Arguments>) => SwitchFlow<Arguments, FlowValue>;
+  case: <T>(fn: MaybeFunction<Arguments, T>) => SwitchFlow<Arguments, FlowValue>;
   default: (fn: AnyFunction<Arguments, FlowValue>) => SwitchFlow<Arguments, FlowValue>;
   then: (fn: AnyFunction<Arguments, FlowValue>) => SwitchFlow<Arguments, FlowValue>;
   run: (...args: Arguments) => SwitchFlow<Arguments, FlowValue>;

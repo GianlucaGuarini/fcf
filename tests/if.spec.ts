@@ -160,7 +160,7 @@ describe('if - spec', () => {
       .else(() => {
         throw new Error('you shouldn\'t get here')
       })
-      .elseIf((greeting: string) => {
+      .elseIf((greeting) => {
         expect(greeting).to.be.equal('hello')
 
         return true

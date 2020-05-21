@@ -4,7 +4,7 @@ import { execMaybeFunction, loopingFns, panic } from './utils'
 
 const loop: (
   scope: WhileFlow<AnyValue[]>,
-  controlFunction: MaybeFunction<AnyValue[]>,
+  controlFunction: MaybeFunction<AnyValue[], AnyValue, AnyValue>,
   ...args: AnyValue[]
 ) => void = (scope, controlFunction, ...args) => {
   scope.timer = loopingFns.start(() => {
@@ -51,7 +51,7 @@ const WHILE_CONTROL_FLOW_STRUCT = Object.seal<WhileFlow<AnyValue[]>>({
   }
 })
 
-export default function createWhileControlFlow<Arguments extends AnyValue[], Return = AnyValue, ControlValue = MaybeFunction<Arguments>>(controlFunction: ControlValue): WhileFlow<Arguments, Return> {
+export default function createWhileControlFlow<Arguments extends AnyValue[], Return = AnyValue, ControlValue = MaybeFunction<Arguments, AnyValue, AnyValue>>(controlFunction: ControlValue): WhileFlow<Arguments, Return> {
   return {
     ...WHILE_CONTROL_FLOW_STRUCT,
     controlFunction
