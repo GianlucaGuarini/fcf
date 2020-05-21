@@ -111,7 +111,7 @@ const greetUserByRole = fcf
     console.log('hello base user')
   })
   .default(() => {
-    console.log('hello base user')
+    console.log('hello whoever you are')
   })
 
 const checkUser = fcf
